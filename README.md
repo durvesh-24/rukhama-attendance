@@ -25,23 +25,6 @@ Admin-only attendance app for a per-day labour business. Works on phone and lapt
 
 A few years of attendance for 40–100 workers is only a few MB, so the **free plans of Supabase and Vercel are enough**. Pricing can change, so check the current plans when you sign up.
 
-> **Before you go live:**
-> - Supabase pauses free projects after about a week with no activity. Daily use keeps it awake. If that's a concern, the Pro plan (about $25/month) never pauses and adds daily backups.
-> - Vercel's free **Hobby** plan is meant for personal, non-commercial use. A business app should use **Pro** (about $20/month) to stay within Vercel's terms.
-
----
-
-## 1. Supabase setup (one time)
-
-1. Create a project at <https://supabase.com/dashboard>. Choose the **Mumbai (ap-south-1)** region.
-2. **Turn off public sign-ups**: Authentication → Sign In / Providers → turn off **Allow new users to sign up**.
-3. **Create the admin user**: Authentication → Users → **Add user** → *Create new user*. Enter the email and password, and tick **Auto Confirm User**.
-4. Copy your keys from Project Settings → API (or API Keys):
-   - Project URL → `NEXT_PUBLIC_SUPABASE_URL`
-   - `anon` / publishable key → `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-   - `service_role` / secret key → `SUPABASE_SERVICE_ROLE_KEY` (**keep this secret**)
-5. Note your **project ref**, the `abcdefghijkl` part of `https://abcdefghijkl.supabase.co`.
-
 ## 2. Local setup
 
 ```bash
@@ -58,22 +41,6 @@ npm run dev                       # http://localhost:3000
 ```
 
 **No CLI?** You can also open Supabase → **SQL Editor** and run the four files in `supabase/migrations/` one by one, in name order.
-
-## 3. Deploy to Vercel
-
-1. Push this folder to a **new GitHub repository** (see the command list below).
-2. Go to <https://vercel.com/new> and import the repository. Vercel detects Next.js on its own.
-3. Under **Environment Variables**, add:
-   - `NEXT_PUBLIC_SUPABASE_URL`
-   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-
-   Do **not** add the service role key. The website never needs it.
-4. Click **Deploy**.
-5. In Supabase → Authentication → URL Configuration, set **Site URL** to your Vercel URL (for example `https://rukhama-attendance.vercel.app`).
-
-Every `git push` to `main` redeploys automatically.
-
----
 
 ## Security model
 
@@ -108,23 +75,4 @@ proxy.ts                    session refresh + login redirect
 supabase/migrations/        schema, RLS, functions, storage
 scripts/make-admin.ts       promote an Auth user to admin
 types/database.types.ts     database types (npm run db:types)
-```
-
-## Scripts
-
-| Command | What it does |
-|---|---|
-| `npm run dev` | Start the local dev server |
-| `npm run build` | Production build |
-| `npm run db:push` | Apply new migrations to the linked Supabase project |
-| `npm run db:types` | Regenerate `types/database.types.ts` from the linked project |
-| `npm run make-admin -- <email> ["Name"]` | Make an existing Auth user an admin |
-| `npm run lint` / `npm run typecheck` | Code checks |
-
-## Adding another admin later
-
-Create the user in Supabase → Authentication → Users (tick Auto Confirm), then run:
-
-```bash
-npm run make-admin -- partner@example.com "Partner Name"
 ```
